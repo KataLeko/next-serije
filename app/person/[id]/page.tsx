@@ -10,8 +10,7 @@ type Person = {
   url: string;
 };
 
-export default async function PersonPage({ params }: { params: { id: string } }) {
-  const res = await fetch(`https://api.tvmaze.com/people/${params.id}`);
+export default async function PersonPage({ params }: any) {  const res = await fetch(`https://api.tvmaze.com/people/${params.id}`);
   if (!res.ok) throw new Error('Greška pri dohvaćanju osobe.');
   const person: Person = await res.json();
 
