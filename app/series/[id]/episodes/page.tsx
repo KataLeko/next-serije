@@ -1,6 +1,6 @@
 import Link from "next/link";
 import FavoriteButton from "@/app/components/FavoriteButton";
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: any) {
   const showRes = await fetch(`https://api.tvmaze.com/shows/${params.id}`);
   if (!showRes.ok) {
     return {

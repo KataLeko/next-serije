@@ -22,7 +22,7 @@ type Props = {
 };
 
 // ✅ SEO metadata
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: any): Promise<Metadata> {
   const res = await fetch(`https://api.tvmaze.com/episodes/${params.episodeId}`);
   if (!res.ok) return { title: "Detalji epizode", description: "Informacije o TV epizodi." };
   const episode: Episode = await res.json();
