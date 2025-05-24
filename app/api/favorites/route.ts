@@ -45,20 +45,4 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ message: "Added to favorites", data });
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  const id = params.id;
-  if (!id) {
-    return NextResponse.json({ error: "Missing id" }, { status: 400 });
-  }
 
-  let favorites = readFavorites();
-  const beforeCount = favorites.length;
-  favorites = favorites.filter((item) => item.id !== id);
-
-  if (favorites.length !== beforeCount) {
-    writeFavorites(favorites);
-    return NextResponse.json({ message: "Removed from favorites" });
-  } else {
-    return NextResponse.json({ error: "Item not found" }, { status: 404 });
-  }
-}
