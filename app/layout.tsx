@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Link from "next/link";
@@ -7,7 +8,11 @@ export const metadata = {
   description: "Najbolje TV serije na jednom mjestu.",
 };
 
-export default function RootLayout({ children }) {
+type RootLayoutProps = {
+  children: ReactNode;
+};
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="hr" className="min-h-screen">
       <head>
@@ -15,7 +20,6 @@ export default function RootLayout({ children }) {
         <meta charSet="UTF-8" />
         <meta name="description" content="Najbolje TV serije na jednom mjestu." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-   
         <link rel="icon" href="/favicon.ico" />
       </head>
 
