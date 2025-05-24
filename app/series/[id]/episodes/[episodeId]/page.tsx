@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function EpisodeDetailPage({ params }: Props) {
+export default async function EpisodeDetailPage({ params }: any) {
   const res = await fetch(`https://api.tvmaze.com/episodes/${params.episodeId}`);
   if (!res.ok) throw new Error("Greška pri dohvaćanju epizode.");
   const episode: Episode = await res.json();

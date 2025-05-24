@@ -17,7 +17,7 @@ type Props = {
   params: { id: string }
 }
 
-export default async function SeriesDetailPage({ params }: Props) {
+export default async function SeriesDetailPage({ params }: any) {
   const res = await fetch(`https://api.tvmaze.com/shows/${params.id}`)
   if (!res.ok) throw new Error("Greška pri dohvaćanju serije.")
   const show: Show = await res.json()

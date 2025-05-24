@@ -29,7 +29,7 @@ type Props = {
   params: { id: string };
 };
 
-export default async function EpisodesPage({ params }: Props) {
+export default async function EpisodesPage({ params }: any) {
   const res = await fetch(`https://api.tvmaze.com/shows/${params.id}/episodes`);
   if (!res.ok) throw new Error('Failed to fetch episodes');
   const episodes: Episode[] = await res.json();
