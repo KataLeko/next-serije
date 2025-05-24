@@ -21,11 +21,10 @@ function writeFavorites(favorites: any[]) {
   fs.writeFileSync(FILE_PATH, JSON.stringify(favorites, null, 2), "utf8");
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  const id = params.id;
+export async function DELETE(req: NextRequest) {
+  const id = req.nextUrl.pathname.split("/").pop(); // Uzmi `id` iz URL-a
+ {
+  
   if (!id) {
     return NextResponse.json({ error: "Missing id" }, { status: 400 });
   }
@@ -43,4 +42,5 @@ export async function DELETE(
 
   writeFavorites(filtered);
   return NextResponse.json({ message: "Removed from favorites" });
+}
 }
