@@ -10,11 +10,24 @@ const GENRES = [
   'Horror', 'Mystery', 'Romance', 'Science-Fiction', 'Thriller'
 ];
 
+type Show = {
+  id: number;
+  name: string;
+  image?: {
+    medium: string;
+    original: string;
+  };
+  genres: string[];
+  rating?: {
+    average: number | null;
+  };
+};
+
 export default function SearchPage() {
   const [query, setQuery] = useState('');
-  const deferredQuery = useDeferredValue(query); 
-  const [shows, setShows] = useState<any[]>([]);
-  const [filteredShows, setFilteredShows] = useState<any[]>([]);
+  const deferredQuery = useDeferredValue(query);
+  const [shows, setShows] = useState<Show[]>([]);
+  const [filteredShows, setFilteredShows] = useState<Show[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [showGenres, setShowGenres] = useState(false);
   const [page, setPage] = useState(0);
@@ -22,7 +35,7 @@ export default function SearchPage() {
   const fetchShows = async (page: number) => {
     try {
       const res = await fetch(`https://api.tvmaze.com/shows?page=${page}`);
-      const data = await res.json();
+      const data: Show[] = await res.json();
       setShows((prev) => {
         const existingIds = new Set(prev.map(show => show.id));
         const newShows = data.filter(show => !existingIds.has(show.id));
@@ -32,7 +45,6 @@ export default function SearchPage() {
       console.error('Greška pri dohvaćanju serija:', err);
     }
   };
-
 
   useEffect(() => {
     if (!deferredQuery.trim()) return;
@@ -44,7 +56,7 @@ export default function SearchPage() {
 
       while (!found && safetyLimit > 0) {
         const res = await fetch(`https://api.tvmaze.com/shows?page=${nextPage}`);
-        const data = await res.json();
+        const data: Show[] = await res.json();
         if (!data.length) break;
 
         setShows((prev) => {
