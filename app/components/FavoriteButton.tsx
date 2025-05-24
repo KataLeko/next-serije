@@ -7,7 +7,13 @@ import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
 export default function FavoriteButton({
   item,
 }: {
-  item: { id: string; title: string; poster: string; type: string };
+  item: {  id: string;
+    title: string;
+    poster: string;
+    type: string;
+    showTitle?: string;
+    season?: number;
+    showId?: string; };
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
 
