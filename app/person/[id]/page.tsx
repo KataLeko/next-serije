@@ -10,23 +10,16 @@ type Person = {
   url: string;
 };
 
-type Props = {
-  params: { id: string };
-};
-
-export default async function PersonPage({ params }: Props) {
+export default async function PersonPage({ params }: { params: { id: string } }) {
   const res = await fetch(`https://api.tvmaze.com/people/${params.id}`);
   if (!res.ok) throw new Error('Greška pri dohvaćanju osobe.');
   const person: Person = await res.json();
 
   return (
     <main className="p-6 max-w-4xl mx-auto text-white">
-      <h1 className="text-4xl font-extrabold tracking-tight text-white mb-8">
-        {person.name}
-      </h1>
+      <h1 className="text-4xl font-extrabold tracking-tight text-white mb-8">{person.name}</h1>
 
       <div className="flex flex-col md:flex-row gap-6 items-start bg-neutral-900 rounded-2xl shadow-lg p-6">
-       
         {person.image?.medium ? (
           <Image
             src={person.image.medium}
@@ -41,18 +34,17 @@ export default async function PersonPage({ params }: Props) {
           </div>
         )}
 
-      
         <div className="space-y-2 text-gray-300 text-base">
-          <p><span className="font-semibold text-white">Spol:</span> {person.gender}</p>
-        <p>
-  <span className="font-semibold text-white">Rođendan:</span>{" "}
-  {person.birthday
-    ? new Date(person.birthday)
-        .toLocaleDateString("hr-HR")
-    : "Nepoznato"}
-</p>
-
-          <p><span className="font-semibold text-white">Država:</span> {person.country?.name ?? 'Nepoznato'}</p>
+          <p>
+            <span className="font-semibold text-white">Spol:</span> {person.gender}
+          </p>
+          <p>
+            <span className="font-semibold text-white">Rođendan:</span>{' '}
+            {person.birthday ? new Date(person.birthday).toLocaleDateString('hr-HR') : 'Nepoznato'}
+          </p>
+          <p>
+            <span className="font-semibold text-white">Država:</span> {person.country?.name ?? 'Nepoznato'}
+          </p>
 
           <a
             href={person.url}
