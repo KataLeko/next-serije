@@ -14,7 +14,7 @@ type CastMember = {
   };
 };
 
-export default async function CastPage({ params }: { params: { id: string } }) {
+export default async function CastPage({ params }: any) {
   const res = await fetch(`https://api.tvmaze.com/shows/${params.id}/cast`);
   if (!res.ok) throw new Error("Greška pri dohvaćanju glumaca.");
   const cast: CastMember[] = await res.json();
