@@ -22,25 +22,22 @@ function writeFavorites(favorites: any[]) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const id = req.nextUrl.pathname.split("/").pop(); // Uzmi `id` iz URL-a
- {
-  
+  const id = req.nextUrl.pathname.split("/").pop();
+
   if (!id) {
     return NextResponse.json({ error: "Missing id" }, { status: 400 });
   }
 
+  // Pretvori u string da je sigurno
+  const idStr = String(id);
+
   const favorites = readFavorites();
-  const filtered = favorites.filter((item) => item.id !== id);
+  const filtered = favorites.filter((item) => item.id !== idStr);
 
   if (filtered.length === favorites.length) {
-    // ništa nije obrisano
-    return NextResponse.json(
-      { error: "Item not found" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "Item not found" }, { status: 404 });
   }
 
   writeFavorites(filtered);
   return NextResponse.json({ message: "Removed from favorites" });
-}
 }

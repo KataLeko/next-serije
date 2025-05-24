@@ -35,6 +35,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  // Osiguraj da je id string
+  data.id = String(data.id);
+
   const favorites = readFavorites();
   const exists = favorites.find((item) => item.id === data.id);
   if (!exists) {

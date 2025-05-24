@@ -7,13 +7,15 @@ import { HeartIcon as HeartOutline } from '@heroicons/react/24/outline';
 export default function FavoriteButton({
   item,
 }: {
-  item: {  id: string;
+  item: {
+    id: string;
     title: string;
     poster: string;
     type: string;
     showTitle?: string;
     season?: number;
-    showId?: string; };
+    showId?: string;
+  };
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -31,6 +33,7 @@ export default function FavoriteButton({
     if (isFavorite) {
       await fetch(`/api/favorites/${item.id}`, { method: 'DELETE' });
       setIsFavorite(false);
+      window.dispatchEvent(new Event('favoritesUpdated'));
     } else {
       await fetch('/api/favorites', {
         method: 'POST',
@@ -40,11 +43,12 @@ export default function FavoriteButton({
         body: JSON.stringify(item),
       });
       setIsFavorite(true);
+      window.dispatchEvent(new Event('favoritesUpdated'));
     }
   };
 
   return (
-    <button onClick={toggleFavorite} className="text-red-500">
+    <button onClick={toggleFavorite} className="text-red-500" aria-label={isFavorite ? "Ukloni iz favorita" : "Dodaj u favorite"}>
       {isFavorite ? (
         <HeartSolid className="w-6 h-6 fill-red-600" />
       ) : (

@@ -1,11 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
-import { HeartIcon as HeartOutline } from "@heroicons/react/24/outline";
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
 
 interface FavoriteItem {
   id: string;
@@ -22,25 +21,31 @@ export default function FavoritesPage() {
   const pathname = usePathname();
 
   const fetchFavorites = () => {
-    fetch("/api/favorites")
+    fetch('/api/favorites')
       .then((res) => res.json())
       .then(setFavorites);
   };
 
   useEffect(() => {
-    if (pathname === "/favorites") {
+    if (pathname === '/favorites') {
       fetchFavorites();
     }
+
+    const handleFavoritesUpdated = () => fetchFavorites();
+
+    window.addEventListener('favoritesUpdated', handleFavoritesUpdated);
+    return () => window.removeEventListener('favoritesUpdated', handleFavoritesUpdated);
   }, [pathname]);
 
   const removeFavorite = async (id: string) => {
-    await fetch(`/api/favorites/${id}`, { method: "DELETE" });
+    await fetch(`/api/favorites/${id}`, { method: 'DELETE' });
     setFavorites((prev) => prev.filter((item) => item.id !== id));
+    window.dispatchEvent(new Event('favoritesUpdated'));
   };
 
-  const seriesFavorites = favorites.filter((f) => f.type === "series");
-  const episodeFavorites = favorites.filter((f) => f.type === "episode");
-  const actorFavorites = favorites.filter((f) => f.type === "actor");
+  const seriesFavorites = favorites.filter((f) => f.type === 'series');
+  const episodeFavorites = favorites.filter((f) => f.type === 'episode');
+  const actorFavorites = favorites.filter((f) => f.type === 'actor');
 
   return (
     <main className="p-6 max-w-5xl mx-auto">
@@ -57,7 +62,7 @@ export default function FavoritesPage() {
                 {seriesFavorites.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-white text-black text-sm font-semibold text-center  rounded-xl shadow p-3 relative"
+                    className="bg-white text-black text-sm font-semibold text-center rounded-xl shadow p-3 relative"
                   >
                     <Link href={`/series/${item.id}`}>
                       {item.poster ? (
@@ -88,18 +93,15 @@ export default function FavoritesPage() {
 
           {episodeFavorites.length > 0 && (
             <section>
-              <h2 className="text-2xl font-semibold mb-4"> Epizode</h2>
+              <h2 className="text-2xl font-semibold mb-4">Epizode</h2>
               <div className="space-y-4">
                 {episodeFavorites.map((item) => (
                   <div
                     key={item.id}
                     className="border rounded-xl p-4 flex justify-between items-center shadow-sm hover:shadow transition"
                   >
-                    <Link
-                      href={`/series/${item.showId}/episodes/${item.id}`}
-                      className="flex-1"
-                    >
-                      <p className=" text-white  font-semibold">{item.title}</p>
+                    <Link href={`/series/${item.showId}/episodes/${item.id}`} className="flex-1">
+                      <p className="text-white font-semibold">{item.title}</p>
                       <p className="text-sm text-gray-500">
                         Serija: {item.showTitle} | Sezona: {item.season}
                       </p>
