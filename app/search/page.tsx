@@ -1,13 +1,24 @@
-'use client';
+// za pretrazivanje serija i prikaz zanrova
+"use client";
 
-import { useEffect, useState, useDeferredValue } from 'react';
-import Head from 'next/head';
-import Image from 'next/image';
-import Link from 'next/link';
+import { useEffect, useState, useDeferredValue } from "react";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
 
 const GENRES = [
-  'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 'Drama', 'Fantasy',
-  'Horror', 'Mystery', 'Romance', 'Science-Fiction', 'Thriller'
+  "Action",
+  "Adventure",
+  "Animation",
+  "Comedy",
+  "Crime",
+  "Drama",
+  "Fantasy",
+  "Horror",
+  "Mystery",
+  "Romance",
+  "Science-Fiction",
+  "Thriller",
 ];
 
 type Show = {
@@ -24,7 +35,7 @@ type Show = {
 };
 
 export default function SearchPage() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState(""); // unos korisnika
   const deferredQuery = useDeferredValue(query);
   const [shows, setShows] = useState<Show[]>([]);
   const [filteredShows, setFilteredShows] = useState<Show[]>([]);
@@ -37,12 +48,12 @@ export default function SearchPage() {
       const res = await fetch(`https://api.tvmaze.com/shows?page=${page}`);
       const data: Show[] = await res.json();
       setShows((prev) => {
-        const existingIds = new Set(prev.map(show => show.id));
-        const newShows = data.filter(show => !existingIds.has(show.id));
+        const existingIds = new Set(prev.map((show) => show.id));
+        const newShows = data.filter((show) => !existingIds.has(show.id));
         return [...prev, ...newShows];
       });
     } catch (err) {
-      console.error('Greška pri dohvaćanju serija:', err);
+      console.error("Greška pri dohvaćanju serija:", err);
     }
   };
 
@@ -55,17 +66,19 @@ export default function SearchPage() {
       let safetyLimit = 10;
 
       while (!found && safetyLimit > 0) {
-        const res = await fetch(`https://api.tvmaze.com/shows?page=${nextPage}`);
+        const res = await fetch(
+          `https://api.tvmaze.com/shows?page=${nextPage}`
+        );
         const data: Show[] = await res.json();
         if (!data.length) break;
 
         setShows((prev) => {
-          const existing = new Set(prev.map(s => s.id));
-          const unique = data.filter(s => !existing.has(s.id));
+          const existing = new Set(prev.map((s) => s.id));
+          const unique = data.filter((s) => !existing.has(s.id));
           return [...prev, ...unique];
         });
 
-        const matches = data.filter(show =>
+        const matches = data.filter((show) =>
           show.name.toLowerCase().includes(deferredQuery.toLowerCase())
         );
         if (matches.length > 0) found = true;
@@ -78,23 +91,26 @@ export default function SearchPage() {
     fetchUntilMatch();
   }, [deferredQuery]);
 
-  useEffect(() => {
+  useEffect(() => {  //  filtrira serije na osnovu upita i odabranih zanrova
     const filtered = shows
       .filter((show) => {
-        const matchesQuery = show.name.toLowerCase().includes(deferredQuery.toLowerCase());
-        const matchesGenre =
+        const matchesQuery = show.name
+          .toLowerCase()
+          .includes(deferredQuery.toLowerCase());
+       // provjera je li serija ima jedan od odabranih zanrova, ako nije odabran zanr, sve prikazuje
+          const matchesGenre =
           selectedGenres.length === 0 ||
           selectedGenres.some((genre) => show.genres.includes(genre));
         return matchesQuery && matchesGenre;
       })
-      .sort((a, b) => (b.rating?.average || 0) - (a.rating?.average || 0));
+      .sort((a, b) => (b.rating?.average || 0) - (a.rating?.average || 0)); // prikaz po ocjeni
 
     setFilteredShows(filtered);
   }, [deferredQuery, selectedGenres, shows]);
-
+ // za dodavanje zanra 
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) =>
-      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre]
+      prev.includes(genre) ? prev.filter((g) => g !== genre) : [...prev, genre] // dodaj ga u odabrane
     );
   };
 
@@ -102,7 +118,10 @@ export default function SearchPage() {
     <div className="p-6 max-w-6xl mx-auto">
       <Head>
         <title>Pretraga serija</title>
-        <meta name="description" content="Pretražuj popularne serije po nazivu i žanru." />
+        <meta
+          name="description"
+          content="Pretražuj popularne serije po nazivu i žanru."
+        />
       </Head>
 
       <h1 className="text-2xl font-bold mb-4">Pretraga serija</h1>
@@ -121,7 +140,7 @@ export default function SearchPage() {
           onClick={() => setShowGenres(!showGenres)}
           className="bg-gradient-to-r from-red-700 to-red-900 hover:from-red-800 hover:to-red-950 text-white text-sm font-medium px-4 py-1.5 rounded-lg shadow-sm transition-all duration-300 hover:scale-105"
         >
-          {showGenres ? 'Sakrij žanrove' : 'Prikaži žanrove'}
+          {showGenres ? "Sakrij žanrove" : "Prikaži žanrove"}
         </button>
 
         {showGenres && (
@@ -131,8 +150,8 @@ export default function SearchPage() {
                 key={genre}
                 className={`cursor-pointer px-4 py-1 rounded-full border border-red-700 text-sm font-medium transition-colors duration-300 ${
                   selectedGenres.includes(genre)
-                    ? 'bg-red-700 text-white'
-                    : 'text-red-700 hover:bg-red-100'
+                    ? "bg-red-700 text-white"
+                    : "text-red-700 hover:bg-red-100"
                 }`}
               >
                 <input
@@ -169,9 +188,11 @@ export default function SearchPage() {
                     Nema slike
                   </div>
                 )}
-                <p className="mt-2 text-sm font-semibold text-center text-black">{show.name}</p>
+                <p className="mt-2 text-sm font-semibold text-center text-black">
+                  {show.name}
+                </p>
                 <p className="text-xs text-gray-500 text-center">
-                  Ocjena: {show.rating?.average ?? 'N/A'}
+                  Ocjena: {show.rating?.average ?? "N/A"}
                 </p>
               </div>
             </Link>

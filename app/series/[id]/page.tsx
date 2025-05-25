@@ -1,26 +1,26 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import FavoriteButton from '@/app/components/FavoriteButton'
-
+//komponenta pojedine serije za prikaz detalja serije
+import Link from "next/link";
+import Image from "next/image";
+import FavoriteButton from "@/app/components/FavoriteButton";
 
 type Show = {
-  id: number
-  name: string
-  genres: string[]
-  rating: { average: number | null }
-  summary: string
-  image?: { medium: string; original: string }
-  status: string
-}
+  id: number;
+  name: string;
+  genres: string[];
+  rating: { average: number | null };
+  summary: string;
+  image?: { medium: string; original: string };
+  status: string;
+};
 
 type Props = {
-  params: { id: string }
-}
+  params: { id: string };
+};
 
 export default async function SeriesDetailPage({ params }: any) {
-  const res = await fetch(`https://api.tvmaze.com/shows/${params.id}`)
-  if (!res.ok) throw new Error("Greška pri dohvaćanju serije.")
-  const show: Show = await res.json()
+  const res = await fetch(`https://api.tvmaze.com/shows/${params.id}`);
+  if (!res.ok) throw new Error("Greška pri dohvaćanju serije.");
+  const show: Show = await res.json();
 
   return (
     <main className="p-4 max-w-4xl mx-auto">
@@ -30,8 +30,8 @@ export default async function SeriesDetailPage({ params }: any) {
           item={{
             id: String(show.id),
             title: show.name,
-            poster: show.image?.medium || '',
-            type: 'series',
+            poster: show.image?.medium || "",
+            type: "series",
           }}
         />
       </div>
@@ -49,10 +49,10 @@ export default async function SeriesDetailPage({ params }: any) {
         <div>
           <p className="text-sm text-gray-600 mb-2">Status: {show.status}</p>
           <p className="text-sm text-gray-600 mb-2">
-            Ocjena: {show.rating.average ?? 'N/A'}
+            Ocjena: {show.rating.average ?? "N/A"}
           </p>
           <p className="text-sm text-gray-600 mb-2">
-            Žanrovi: {show.genres.join(', ')}
+            Žanrovi: {show.genres.join(", ")}
           </p>
           <div
             className="prose max-w-none mt-2"
@@ -64,9 +64,9 @@ export default async function SeriesDetailPage({ params }: any) {
       <nav className="mt-6 flex gap-4">
         <Link
           href={`/series/${params.id}/episodes`}
-           className="relative text-white font-medium px-4 py-2 hover:text-red-700 transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-red-700 hover:after:w-full after:transition-all after:duration-300"
+          className="relative text-white font-medium px-4 py-2 hover:text-red-700 transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-[2px] after:bg-red-700 hover:after:w-full after:transition-all after:duration-300"
         >
-           Epizode
+          Epizode
         </Link>
         <Link
           href={`/series/${params.id}/cast`}
@@ -76,5 +76,5 @@ export default async function SeriesDetailPage({ params }: any) {
         </Link>
       </nav>
     </main>
-  )
+  );
 }

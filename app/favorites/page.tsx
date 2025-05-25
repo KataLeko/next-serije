@@ -1,10 +1,11 @@
-'use client';
+// stranica za prikaz favorita
+"use client";
 
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { HeartIcon as HeartSolid } from '@heroicons/react/24/solid';
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { HeartIcon as HeartSolid } from "@heroicons/react/24/solid";
 
 interface FavoriteItem {
   id: string;
@@ -21,31 +22,34 @@ export default function FavoritesPage() {
   const pathname = usePathname();
 
   const fetchFavorites = () => {
-    fetch('/api/favorites')
+    fetch("/api/favorites")
       .then((res) => res.json())
       .then(setFavorites);
   };
-
+// omogucava automatsko azuriranje kada korisnik doda ili ukloni favorita s neke druge stranice
   useEffect(() => {
-    if (pathname === '/favorites') {
+    if (pathname === "/favorites") {
       fetchFavorites();
     }
 
     const handleFavoritesUpdated = () => fetchFavorites();
 
-    window.addEventListener('favoritesUpdated', handleFavoritesUpdated);
-    return () => window.removeEventListener('favoritesUpdated', handleFavoritesUpdated);
+    window.addEventListener("favoritesUpdated", handleFavoritesUpdated);
+    return () =>
+      window.removeEventListener("favoritesUpdated", handleFavoritesUpdated);
   }, [pathname]);
 
-const removeFavorite = async (id: string, type: string) => {
-  await fetch(`/api/favorites?id=${id}&type=${type}`, { method: 'DELETE' });
-  setFavorites((prev) => prev.filter((item) => !(item.id === id && item.type === type)));
-  window.dispatchEvent(new Event('favoritesUpdated'));
-};
-
-  const seriesFavorites = favorites.filter((f) => f.type === 'series');
-  const episodeFavorites = favorites.filter((f) => f.type === 'episode');
-  const actorFavorites = favorites.filter((f) => f.type === 'actor');
+  const removeFavorite = async (id: string, type: string) => {
+    await fetch(`/api/favorites?id=${id}&type=${type}`, { method: "DELETE" });
+    setFavorites((prev) =>
+      prev.filter((item) => !(item.id === id && item.type === type))
+    );
+    window.dispatchEvent(new Event("favoritesUpdated"));
+  };
+// za prikaz favorita po kategorijama
+  const seriesFavorites = favorites.filter((f) => f.type === "series");
+  const episodeFavorites = favorites.filter((f) => f.type === "episode");
+  const actorFavorites = favorites.filter((f) => f.type === "actor");
 
   return (
     <main className="p-6 max-w-5xl mx-auto">
@@ -79,7 +83,7 @@ const removeFavorite = async (id: string, type: string) => {
                     </Link>
                     <p className="mt-2 font-medium text-sm">{item.title}</p>
                     <button
-                      onClick={() => removeFavorite(item.id,item.type)}
+                      onClick={() => removeFavorite(item.id, item.type)}
                       className="ml-4 text-red-600 hover:text-red-800 transition"
                       aria-label="Ukloni iz favorita"
                     >
@@ -100,14 +104,17 @@ const removeFavorite = async (id: string, type: string) => {
                     key={item.id}
                     className="border rounded-xl p-4 flex justify-between items-center shadow-sm hover:shadow transition"
                   >
-                    <Link href={`/series/${item.showId}/episodes/${item.id}`} className="flex-1">
+                    <Link
+                      href={`/series/${item.showId}/episodes/${item.id}`}
+                      className="flex-1"
+                    >
                       <p className="text-white font-semibold">{item.title}</p>
                       <p className="text-sm text-gray-500">
                         Serija: {item.showTitle} | Sezona: {item.season}
                       </p>
                     </Link>
                     <button
-                      onClick={() => removeFavorite(item.id,item.type)}
+                      onClick={() => removeFavorite(item.id, item.type)}
                       className="ml-4 text-red-600 hover:text-red-800 transition"
                       aria-label="Ukloni iz favorita"
                     >
@@ -143,7 +150,7 @@ const removeFavorite = async (id: string, type: string) => {
                     </Link>
                     <p className="mt-2 font-medium text-sm">{item.title}</p>
                     <button
-                      onClick={() => removeFavorite(item.id,item.type)}
+                      onClick={() => removeFavorite(item.id, item.type)}
                       className="ml-4 text-red-600 hover:text-red-800 transition"
                       aria-label="Ukloni iz favorita"
                     >

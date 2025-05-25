@@ -8,7 +8,7 @@ export const metadata = {
   description: "Najbolje TV serije na jednom mjestu.",
 };
 
-type RootLayoutProps = {
+type RootLayoutProps = {  //:: ChatGPT // bez ovoga na Vercelu javljalo gresku
   children: ReactNode;
 };
 

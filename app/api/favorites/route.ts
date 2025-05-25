@@ -1,4 +1,3 @@
-// app/api/favorites/route.ts
 import { NextResponse } from "next/server";
 
 let favorites: any[] = [];
@@ -16,12 +15,17 @@ export async function POST(req: Request) {
 
   data.id = String(data.id);
 
-  const exists = favorites.some((item) => item.id === data.id && item.type === data.type);
+  const exists = favorites.some(
+    (item) => item.id === data.id && item.type === data.type
+  ); //komb id i type jer npr.serija  i epizoda mogu imati isti id
   if (!exists) {
     favorites.push(data);
   }
 
-  return NextResponse.json({ message: "Added to favorites", data }, { status: 201 });
+  return NextResponse.json(
+    { message: "Added to favorites", data },
+    { status: 201 }
+  );
 }
 
 export async function DELETE(req: Request) {

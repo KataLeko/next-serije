@@ -1,5 +1,7 @@
+//komponneta za prikazs svih epizoda pojedine serije
 import Link from "next/link";
 import FavoriteButton from "@/app/components/FavoriteButton";
+
 export async function generateMetadata({ params }: any) {
   const showRes = await fetch(`https://api.tvmaze.com/shows/${params.id}`);
   if (!showRes.ok) {
@@ -52,7 +54,7 @@ export default async function EpisodesPage({ params }: any) {
       <ul className="space-y-4">
         {episodes.map((ep) => (
           <li key={ep.id} className="border p-4 rounded hover:shadow relative">
-            <div className="absolute top-2 right-2">
+            <div className="absolute top-2 right-2"> {/*za dodavanje epizode u favorite*/}
               <FavoriteButton
                 item={{
                   id: String(ep.id),
@@ -65,7 +67,7 @@ export default async function EpisodesPage({ params }: any) {
                 }}
               />
             </div>
-            <Link href={`/series/${params.id}/episodes/${ep.id}`}>
+            <Link href={`/series/${params.id}/episodes/${ep.id}`}> {/*za pogledat detalje odredjene epizode */}
               <h2 className="text-xl font-semibold">{ep.name}</h2>
               <p>Sezona {ep.season}, epizoda {ep.number}</p>
               <p>Datum emitiranja: {formatDate(ep.airdate)}</p>

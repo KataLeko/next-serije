@@ -1,4 +1,12 @@
-import Image from 'next/image';
+// za prikaz detalja o glumcu
+
+// ({ params }: any) -- nije htjelo na Vercelu raditi ako nije : any
+// app/person/[id]/page.tsx
+// Type error: Type '{ params: { id: string; }; }' does not satisfy the constraint 'PageProps'.
+//   Types of property 'params' are incompatible.
+//     Type '{ id: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
+
+import Image from "next/image";
 
 type Person = {
   id: number;
@@ -10,13 +18,16 @@ type Person = {
   url: string;
 };
 
-export default async function PersonPage({ params }: any) {  const res = await fetch(`https://api.tvmaze.com/people/${params.id}`);
-  if (!res.ok) throw new Error('Greška pri dohvaćanju osobe.');
+export default async function PersonPage({ params }: any) {
+  const res = await fetch(`https://api.tvmaze.com/people/${params.id}`);
+  if (!res.ok) throw new Error("Greška pri dohvaćanju osobe.");
   const person: Person = await res.json();
 
   return (
     <main className="p-6 max-w-4xl mx-auto text-white">
-      <h1 className="text-4xl font-extrabold tracking-tight text-white mb-8">{person.name}</h1>
+      <h1 className="text-4xl font-extrabold tracking-tight text-white mb-8">
+        {person.name}
+      </h1>
 
       <div className="flex flex-col md:flex-row gap-6 items-start bg-neutral-900 rounded-2xl shadow-lg p-6">
         {person.image?.medium ? (
@@ -35,14 +46,18 @@ export default async function PersonPage({ params }: any) {  const res = await f
 
         <div className="space-y-2 text-gray-300 text-base">
           <p>
-            <span className="font-semibold text-white">Spol:</span> {person.gender}
+            <span className="font-semibold text-white">Spol:</span>{" "}
+            {person.gender}
           </p>
           <p>
-            <span className="font-semibold text-white">Rođendan:</span>{' '}
-            {person.birthday ? new Date(person.birthday).toLocaleDateString('hr-HR') : 'Nepoznato'}
+            <span className="font-semibold text-white">Rođendan:</span>{" "}
+            {person.birthday
+              ? new Date(person.birthday).toLocaleDateString("hr-HR")
+              : "Nepoznato"}
           </p>
           <p>
-            <span className="font-semibold text-white">Država:</span> {person.country?.name ?? 'Nepoznato'}
+            <span className="font-semibold text-white">Država:</span>{" "}
+            {person.country?.name ?? "Nepoznato"}
           </p>
 
           <a
