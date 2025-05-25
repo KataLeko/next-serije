@@ -1,3 +1,4 @@
+// components/FavoriteButton.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -23,17 +24,16 @@ export default function FavoriteButton({
     const fetchFavorites = async () => {
       const res = await fetch('/api/favorites');
       const data = await res.json();
-      const found = data.find((fav: any) => fav.id === item.id);
+      const found = data.find((fav: any) => fav.id === item.id && fav.type === item.type);
       setIsFavorite(!!found);
     };
     fetchFavorites();
-  }, [item.id]);
+  }, [item.id, item.type]);
 
   const toggleFavorite = async () => {
     if (isFavorite) {
-      await fetch(`/api/favorites/${item.id}`, { method: 'DELETE' });
+      await fetch(`/api/favorites?id=${item.id}&type=${item.type}`, { method: 'DELETE' });
       setIsFavorite(false);
-      window.dispatchEvent(new Event('favoritesUpdated'));
     } else {
       await fetch('/api/favorites', {
         method: 'POST',
@@ -43,8 +43,8 @@ export default function FavoriteButton({
         body: JSON.stringify(item),
       });
       setIsFavorite(true);
-      window.dispatchEvent(new Event('favoritesUpdated'));
     }
+    window.dispatchEvent(new Event('favoritesUpdated'));
   };
 
   return (

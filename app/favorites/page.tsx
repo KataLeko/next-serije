@@ -37,11 +37,11 @@ export default function FavoritesPage() {
     return () => window.removeEventListener('favoritesUpdated', handleFavoritesUpdated);
   }, [pathname]);
 
-  const removeFavorite = async (id: string) => {
-    await fetch(`/api/favorites/${id}`, { method: 'DELETE' });
-    setFavorites((prev) => prev.filter((item) => item.id !== id));
-    window.dispatchEvent(new Event('favoritesUpdated'));
-  };
+const removeFavorite = async (id: string, type: string) => {
+  await fetch(`/api/favorites?id=${id}&type=${type}`, { method: 'DELETE' });
+  setFavorites((prev) => prev.filter((item) => !(item.id === id && item.type === type)));
+  window.dispatchEvent(new Event('favoritesUpdated'));
+};
 
   const seriesFavorites = favorites.filter((f) => f.type === 'series');
   const episodeFavorites = favorites.filter((f) => f.type === 'episode');
@@ -79,7 +79,7 @@ export default function FavoritesPage() {
                     </Link>
                     <p className="mt-2 font-medium text-sm">{item.title}</p>
                     <button
-                      onClick={() => removeFavorite(item.id)}
+                      onClick={() => removeFavorite(item.id,item.type)}
                       className="ml-4 text-red-600 hover:text-red-800 transition"
                       aria-label="Ukloni iz favorita"
                     >
@@ -107,7 +107,7 @@ export default function FavoritesPage() {
                       </p>
                     </Link>
                     <button
-                      onClick={() => removeFavorite(item.id)}
+                      onClick={() => removeFavorite(item.id,item.type)}
                       className="ml-4 text-red-600 hover:text-red-800 transition"
                       aria-label="Ukloni iz favorita"
                     >
@@ -143,7 +143,7 @@ export default function FavoritesPage() {
                     </Link>
                     <p className="mt-2 font-medium text-sm">{item.title}</p>
                     <button
-                      onClick={() => removeFavorite(item.id)}
+                      onClick={() => removeFavorite(item.id,item.type)}
                       className="ml-4 text-red-600 hover:text-red-800 transition"
                       aria-label="Ukloni iz favorita"
                     >
